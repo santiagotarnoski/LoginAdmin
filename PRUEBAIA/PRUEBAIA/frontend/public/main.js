@@ -1,6 +1,6 @@
-﻿const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:3000'
-  : 'https://tu-backend.onrender.com'; // Cambiarás esto después del deploy
+  : 'https://loginadmin-ge3g.onrender.com'; // ← Cambia esta URL
 const $ = (sel) => document.querySelector(sel);
 
 const tabLogin = $('#tab-login');
@@ -562,6 +562,7 @@ if (getToken()) {
 } else {
   showAuth();
 }
+
 
 
 
