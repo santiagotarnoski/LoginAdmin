@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 min-h-screen">
+  <div id="auth-container" class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+      <!-- Header con logo -->
+      <div class="flex flex-col items-center mb-8">
+        <div class="mb-4">
+          <img src="/images/technologysolutionsmx_logo.jpg" 
+               alt="TechSoluciones MX" 
+               class="h-16 w-auto object-contain rounded-lg shadow-lg logo-header" />
+        </div>
+        <h1 class="text-2xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Sistema de Gestión de Usuarios
+        </h1>
+        <p class="text-slate-400 text-xs mt-2 text-center">TechSoluciones S.A. - Control de Acceso RBAC</p>
+      </div>
+      
+      <div id="auth-forms" class="card rounded-2xl shadow-2xl border-slate-700/60 backdrop-blur">
+      <div class="tabs">
+        <button id="tab-login" class="tab active hover:brightness-110 transition">Iniciar sesión</button>
+        <button id="tab-register" class="tab hover:brightness-110 transition">Registrarse</button>
+      </div>
+
+      <form id="login-form" class="form visible">
+        <label>Usuario</label>
+        <input id="login-username" type="text" placeholder="tu_usuario" required />
+        <label>Contraseña</label>
+        <input id="login-password" type="password" placeholder="••••••" required />
+        <button type="submit" class="hover:brightness-110 transition">Entrar</button>
+        <p class="msg" id="login-msg"></p>
+      </form>
+
+      <form id="register-form" class="form">
+        <label>Usuario</label>
+        <input id="reg-username" type="text" placeholder="nuevo_usuario" required />
+        <label>Contraseña</label>
+        <input id="reg-password" type="password" placeholder="mínimo 6 caracteres" required />
+        <label>Rol</label>
+        <select id="reg-role">
+          <option>Personal</option>
+          <option>Jefe de Área</option>
+          <option>Supervisor</option>
+          <option>Gerente</option>
+          <option>Director</option>
+          <option>Administrador del Sistema</option>
+        </select>
+        <button type="submit" class="hover:brightness-110 transition">Crear cuenta</button>
+        <p class="msg" id="reg-msg"></p>
+      </form>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- Dashboard fuera del contenedor angosto del login -->
+  <div class="px-4 md:px-6 lg:px-8 py-6">
+    <div id="dashboard" class="card hidden rounded-2xl shadow-2xl border-slate-700/60 backdrop-blur w-full max-w-6xl mx-auto">
+      <h2>Bienvenido, <span id="username-span"></span></h2>
+      <p>Rol: <strong id="role-span"></strong></p>
+      <button id="btn-profile">Ver perfil</button>
+      <button id="btn-logout" class="secondary">Cerrar sesión</button>
+      
+      <!-- Dashboard personalizado por rol -->
+      <div class="user-dashboard">
+        <div class="dashboard-tabs">
+          <button id="tab-overview" class="dashboard-tab active">Resumen</button>
+          <button id="tab-profile" class="dashboard-tab">Mi Perfil</button>
+          <button id="tab-sessions" class="dashboard-tab">Sesiones</button>
+          <button id="tab-notifications" class="dashboard-tab">Notificaciones</button>
+        </div>
+
+        <!-- Tab Resumen -->
+        <div id="overview-panel" class="dashboard-panel">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h4>Último Login</h4>
+              <p id="last-login">Cargando...</p>
+            </div>
+            <div class="stat-card">
+              <h4>Sesiones Activas</h4>
+              <p id="active-sessions">Cargando...</p>
+            </div>
+            <div class="stat-card">
+              <h4>Notificaciones</h4>
+              <p id="unread-notifications">Cargando...</p>
+            </div>
+            <div class="stat-card">
+              <h4>Total Sesiones</h4>
+              <p id="total-sessions">Cargando...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Mi Perfil -->
+        <div id="profile-panel" class="dashboard-panel hidden">
+          <h4>Mi Perfil</h4>
+          <form id="profile-form">
+            <div class="form-row">
+              <label>Nombre completo</label>
+              <input id="profile-fullname" type="text" placeholder="Tu nombre completo" />
+            </div>
+            <div class="form-row">
+              <label>Email</label>
+              <input id="profile-email" type="email" placeholder="tu@email.com" />
+            </div>
+            <div class="form-row">
+              <label>Teléfono</label>
+              <input id="profile-phone" type="tel" placeholder="+1234567890" />
+            </div>
+            <div class="form-row">
+              <label>Departamento</label>
+              <input id="profile-department" type="text" placeholder="Tu departamento" />
+            </div>
+            <button type="submit">Actualizar Perfil</button>
+          </form>
+
+          <div class="form-section">
+            <h5>Cambiar Contraseña</h5>
+            <form id="password-form">
+              <div class="form-row">
+                <label>Contraseña actual</label>
+                <input id="current-password" type="password" placeholder="••••••" />
+              </div>
+              <div class="form-row">
+                <label>Nueva contraseña</label>
+                <input id="new-password-profile" type="password" placeholder="••••••" />
+              </div>
+              <button type="submit">Cambiar Contraseña</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Tab Sesiones -->
+        <div id="sessions-panel" class="dashboard-panel hidden">
+          <h4>Historial de Sesiones</h4>
+          <button id="btn-refresh-sessions">Actualizar</button>
+          <div id="sessions-list"></div>
+        </div>
+
+        <!-- Tab Notificaciones -->
+        <div id="notifications-panel" class="dashboard-panel hidden">
+          <h4>Mis Notificaciones</h4>
+          <button id="btn-refresh-notifications">Actualizar</button>
+          <div id="notifications-list"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <h3>Probar autorizaciones</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button data-action="lectura" class="secondary hover:brightness-110 transition">Lectura</button>
+          <button data-action="edicion" class="secondary hover:brightness-110 transition">Edición</button>
+          <button data-action="aprobacion" class="secondary hover:brightness-110 transition">Aprobación</button>
+          <button data-action="administracion" class="secondary hover:brightness-110 transition">Administración</button>
+        </div>
+        <p class="msg" id="auth-msg"></p>
+      </div>
+
+      <!-- Sección de administración (solo para administradores) -->
+      <div id="admin-section" class="admin-section hidden">
+        <h3>Panel de Administración</h3>
+        
+        <div class="admin-tabs">
+          <button id="tab-rbac" class="admin-tab active">RBAC</button>
+          <button id="tab-audit" class="admin-tab">Auditoría</button>
+          <button id="tab-password-reset" class="admin-tab">Recuperar Contraseña</button>
+        </div>
+
+        <!-- Tab RBAC -->
+        <div id="rbac-panel" class="admin-panel">
+          <h4>Gestión de Roles y Permisos</h4>
+          
+          <div class="form-group">
+            <h5>Roles</h5>
+            <div class="form-row">
+              <input id="new-role" type="text" placeholder="Nuevo rol" />
+          <button id="btn-create-role" class="hover:brightness-110 transition">Crear Rol</button>
+            </div>
+            <div id="roles-list"></div>
+          </div>
+
+          <div class="form-group">
+            <h5>Permisos</h5>
+            <div class="form-row">
+              <input id="new-permission" type="text" placeholder="Nuevo permiso" />
+          <button id="btn-create-permission" class="hover:brightness-110 transition">Crear Permiso</button>
+            </div>
+            <div id="permissions-list"></div>
+          </div>
+
+          <div class="form-group">
+            <h5>Asignar Permiso a Rol</h5>
+            <div class="form-row">
+              <select id="assign-role">
+                <option value="">Seleccionar rol</option>
+              </select>
+              <select id="assign-permission">
+                <option value="">Seleccionar permiso</option>
+              </select>
+              <button id="btn-assign-permission" class="hover:brightness-110 transition">Asignar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Auditoría -->
+        <div id="audit-panel" class="admin-panel hidden">
+          <h4>Logs de Auditoría</h4>
+          <button id="btn-refresh-audit" class="hover:brightness-110 transition">Actualizar</button>
+          <div id="audit-list"></div>
+        </div>
+
+        <!-- Tab Recuperación de Contraseña -->
+        <div id="password-reset-panel" class="admin-panel hidden">
+          <h4>Recuperación de Contraseña</h4>
+          
+          <div class="form-group">
+            <h5>Solicitar Token</h5>
+            <div class="form-row">
+              <input id="reset-username" type="text" placeholder="Usuario" />
+              <button id="btn-request-reset" class="hover:brightness-110 transition">Solicitar</button>
+            </div>
+            <div id="reset-token-display" class="hidden">
+              <p><strong>Token:</strong> <span id="reset-token"></span></p>
+              <p><strong>Expira:</strong> <span id="reset-expires"></span></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <h5>Confirmar Nueva Contraseña</h5>
+            <div class="form-row">
+              <input id="reset-token-input" type="text" placeholder="Token" />
+              <input id="new-password" type="password" placeholder="Nueva contraseña" />
+              <button id="btn-confirm-reset" class="hover:brightness-110 transition">Confirmar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <pre id="profile-json"></pre>
+    </div>
+  </div>
+
+  <script src="/main.js"></script>
+  <noscript>Habilita JavaScript para usar la aplicación.</noscript>
+  
+</body>
+\n</html>
+
+
